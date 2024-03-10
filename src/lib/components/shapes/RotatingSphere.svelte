@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
 
     let scene, camera, renderer, sphere, container;
+    let rotationInterval = null;
 
     function init() {
         scene = new THREE.Scene();
@@ -154,9 +155,44 @@
         };
     });
 
+    // Functions for rotating the sphere with buttons
+    function rotateClockwise() {
+        if (rotationInterval) clearInterval(rotationInterval);
+        rotationInterval = setInterval(() => rotateSphere(-0.01), 16);
+    }
+
+    function rotateCounterClockwise() {
+        if (rotationInterval) clearInterval(rotationInterval);
+        rotationInterval = setInterval(() => rotateSphere(0.01), 16);
+    }
+
+    function stopRotation() {
+        if (rotationInterval) clearInterval(rotationInterval);
+    }
+
+    function rotateSphere(angle) {
+        // Get the direction vector from the camera to the sphere
+        const direction = new THREE.Vector3();
+        sphere.getWorldPosition(direction);
+        direction.sub(camera.position).normalize();
+
+        // Calculate the rotation axis perpendicular to the direction vector and camera up vector
+        const axis = new THREE.Vector3();
+        axis.crossVectors(direction, camera.up).normalize();
+
+        // Calculate a new rotation axis perpendicular to the current one
+        const newAxis = new THREE.Vector3();
+        newAxis.crossVectors(axis, camera.up).normalize();
+
+        // Rotate the sphere around the calculated new axis
+        sphere.rotateOnWorldAxis(newAxis, angle);
+    }
+
 </script>
 
 <div bind:this={container} class="rotating-sphere">
+    <button on:mousedown={rotateClockwise} on:mouseleave={stopRotation} on:mouseup={stopRotation}>Rotate Clockwise</button>
+    <button on:mousedown={rotateCounterClockwise} on:mouseleave={stopRotation} on:mouseup={stopRotation}>Rotate Counterclockwise</button>
 </div>
 
 <style>
