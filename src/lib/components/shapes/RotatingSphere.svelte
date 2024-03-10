@@ -94,6 +94,34 @@
         isDragging = false;
     }
 
+    function onPointerDown(event) {
+        event.preventDefault();
+        isDragging = true;
+        const touch = event.touches ? event.touches[0] : event;
+        previousMousePosition.x = touch.clientX;
+        previousMousePosition.y = touch.clientY;
+    }
+
+    function onPointerMove(event) {
+        event.preventDefault();
+        if (isDragging) {
+            const touch = event.touches ? event.touches[0] : event;
+            const deltaMoveX = touch.clientX - previousMousePosition.x;
+            const deltaMoveY = touch.clientY - previousMousePosition.y;
+            const sensitivity = 0.004;
+
+            sphere.rotation.y += deltaMoveX * sensitivity;
+            sphere.rotation.x += deltaMoveY * sensitivity;
+            previousMousePosition.x = touch.clientX;
+            previousMousePosition.y = touch.clientY;
+        }
+    }
+
+    function onPointerUp(event) {
+        event.preventDefault();
+        isDragging = false;
+    }
+
     function toRadians(degrees) {
         return degrees * (Math.PI / 180);
     }
@@ -105,11 +133,19 @@
         container.addEventListener('mousedown', onMouseDown);
         container.addEventListener('mousemove', onMouseMove);
         container.addEventListener('mouseup', onMouseUp);
+
+        container.addEventListener('touchstart', onPointerDown);
+        container.addEventListener('touchmove', onPointerMove);
+        container.addEventListener('touchend', onPointerUp);
         
         return () => {
             container.removeEventListener('mousedown', onMouseDown);
             container.removeEventListener('mousemove', onMouseMove);
             container.removeEventListener('mouseup', onMouseUp);
+
+            container.removeEventListener('touchstart', onPointerDown);
+            container.removeEventListener('touchmove', onPointerMove);
+            container.removeEventListener('touchend', onPointerUp);
         };
     });
 
@@ -128,5 +164,6 @@
         overflow: hidden;
         margin: 0;
         padding: 0;
+        touch-action: none;
     }
 </style>
