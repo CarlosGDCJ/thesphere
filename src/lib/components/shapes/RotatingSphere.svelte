@@ -158,12 +158,12 @@
     // Functions for rotating the sphere with buttons
     function rotateClockwise() {
         if (rotationInterval) clearInterval(rotationInterval);
-        rotationInterval = setInterval(() => rotateSphere(-0.01), 16);
+        rotationInterval = setInterval(() => rotateSphere(-0.01), 16); // Adjust rotation speed if needed
     }
 
     function rotateCounterClockwise() {
         if (rotationInterval) clearInterval(rotationInterval);
-        rotationInterval = setInterval(() => rotateSphere(0.01), 16);
+        rotationInterval = setInterval(() => rotateSphere(0.01), 16); // Adjust rotation speed if needed
     }
 
     function stopRotation() {
@@ -191,8 +191,8 @@
 </script>
 
 <div bind:this={container} class="rotating-sphere">
-    <button on:mousedown={rotateClockwise} on:mouseleave={stopRotation} on:mouseup={stopRotation}>Rotate Clockwise</button>
-    <button on:mousedown={rotateCounterClockwise} on:mouseleave={stopRotation} on:mouseup={stopRotation}>Rotate Counterclockwise</button>
+    <button on:mousedown={rotateClockwise} on:mouseleave={stopRotation} on:mouseup={stopRotation} on:touchstart={rotateClockwise} on:touchend={stopRotation}>Rotate Clockwise</button>
+    <button on:mousedown={rotateCounterClockwise} on:mouseleave={stopRotation} on:mouseup={stopRotation} on:touchstart={rotateCounterClockwise} on:touchend={stopRotation}>Rotate Counterclockwise</button>
 </div>
 
 <style>
