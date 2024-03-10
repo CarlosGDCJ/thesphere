@@ -45,7 +45,12 @@
         sphere.add(arrowHelper3);
 
         // Set up the camera position
-        camera.position.z = 5;
+        let pos = 5
+        if (window.innerWidth < 600) {
+            pos = 7;
+        }
+
+        camera.position.z = pos;
     }
 
     // Render loop
